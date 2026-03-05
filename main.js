@@ -44,6 +44,19 @@ const modalContent = {
         content: "Built a human–robot interaction system where a TM5-900 collaborative robot plays tic-tac-toe against a person using real-time vision and autonomous decision-making. ",
         link: "https://www.youtube.com/watch?v=XGwxpwdxdEI"
     },
+    "Portal": {
+        title: "My Linkedin",
+        content: "",
+        link: "https://www.linkedin.com/in/liewqihan/",
+        linkname: "Press me!"
+
+    },
+    "Name": {
+        title: "My Github",
+        content: "",
+        link: "https://github.com/danliew123",
+        linkname: "Press me!"
+    }
 }
 
 const modal = document.querySelector(".modal")
@@ -57,6 +70,9 @@ function showModal(id) {
     if (content) {
         modalTitle.textContent = content.title
         modalProjectDescription.textContent = content.content
+        if (content.linkname) {
+            modalVisitProjectButton.textContent = content.linkname
+        }
         if(content.link) {
             modalVisitProjectButton.href = content.link
             modalVisitProjectButton.classList.remove("hidden")
@@ -71,13 +87,70 @@ function hideModal(){
     modal.classList.toggle("hidden")
 }
 
+function jumpCharacter(meshID) {
+    const mesh = scene.getObjectByName(meshID)
+    const jumpHeight = 2
+    const jumpDuration = 0.5
+
+    const t1 = gsap.timeline()
+
+    t1.to(mesh.scale, {
+        x: 1.2,
+        y: 0.8,
+        z: 1.2,
+        duration: jumpDuration * 0.2,
+        ease: "power2.out",
+    })
+
+    t1.to(mesh.scale, {
+        x: 0.8,
+        y: 1.3,
+        z: 0.8,
+        duration: jumpDuration * 0.3,
+        ease: "power2.out",
+    })
+
+    t1.to(
+        mesh.position,
+        {
+            y: mesh.position.y + jumpHeight,
+            duration: jumpDuration * 0.5,
+            ease: "power2.out"
+        },
+        "<"
+    )
+    t1.to(mesh.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        duration: jumpDuration * 0.3,
+        ease: "power1.out",
+    })
+    t1.to(
+        mesh.position,
+        {
+            y: mesh.position.y,
+            duration: jumpDuration * 0.5,
+            ease: "bounce.out"
+        },
+        ">"
+    )
+    t1.to(mesh.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        duration: jumpDuration * 0.2,
+        ease: "elastic.out(1, 0.3)",
+    })
+}
+
 let intersectedObject = ""
 const intersectObjects = []
-const intersectObjectsNames = ['Project_1', 'Project_2', 'Project_3', 'Name', 'Portal']
+const intersectObjectsNames = ['Project_1', 'Project_2', 'Project_3', 'Name', 'Portal', 'ditto', 'pochacco', 'duck']
 
 const loader = new GLTFLoader();
 loader.load( 
-    './portfolio_5.0.glb', 
+    './portfolio_6.0.glb', 
     function ( glb ) {
         glb.scene.traverse((child) => {
             if (intersectObjectsNames.includes(child.name)) {
@@ -156,8 +229,12 @@ function onResize() {
 
 function onClick(){
     console.log(intersectedObject)
-    if (intersectedObject) {
-        showModal(intersectedObject)
+    if (intersectedObject !== "") {
+        if (['ditto', 'pochacco', 'duck'].includes(intersectedObject)){
+            jumpCharacter(intersectedObject)
+        } else {
+            showModal(intersectedObject)
+        }
     }
 }
 
@@ -168,6 +245,13 @@ function onPointerMove(event) {
 
 function moveCharacter(targetPosition, targetRotation){
     character.isMoving = true
+
+    let rotationDiff = 
+        ((((targetRotation - character.instance.rotation.y) % (2 * Math.PI)) +
+            3 * Math.PI) %
+            (2 * Math.PI)) - 
+            Math.PI
+    let finalRotation =  character.instance.rotation.y + rotationDiff
 
     const t1 = gsap.timeline({
         onComplete: ()=>{
@@ -182,7 +266,7 @@ function moveCharacter(targetPosition, targetRotation){
     })
 
     t1.to(character.instance.rotation, {
-        y: targetRotation,
+        y: finalRotation,
         duration: character.moveDuration,
     },
     0
