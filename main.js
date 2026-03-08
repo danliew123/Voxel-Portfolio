@@ -91,6 +91,54 @@ const modalTitle = document.querySelector(".modal-title")
 const modalProjectDescription = document.querySelector(".modal-project-description")
 const modalExitButton = document.querySelector(".modal-exit-button")
 const modalVisitProjectButton = document.querySelector(".modal-project-visit-button")
+const bgMusic = document.querySelector("#bg-music")
+const musicToggleButton = document.querySelector(".music-toggle")
+
+let musicEnabled = true
+let hasTriedAutoplay = false
+
+function updateMusicButtonLabel() {
+    if (!musicToggleButton) return
+    musicToggleButton.textContent = musicEnabled ? "Music: On" : "Music: Off"
+}
+
+function playMusic() {
+    if (!bgMusic) return
+    bgMusic.volume = 0.35
+    bgMusic.play()
+        .then(() => {
+            musicEnabled = true
+            updateMusicButtonLabel()
+        })
+        .catch(() => {
+            musicEnabled = false
+            updateMusicButtonLabel()
+        })
+}
+
+function pauseMusic() {
+    if (!bgMusic) return
+    bgMusic.pause()
+    musicEnabled = false
+    updateMusicButtonLabel()
+}
+
+function toggleMusic() {
+    if (!bgMusic) return
+    if (bgMusic.paused) {
+        playMusic()
+    } else {
+        pauseMusic()
+    }
+}
+
+function unlockMusicOnFirstInteraction() {
+    if (hasTriedAutoplay) return
+    hasTriedAutoplay = true
+    playMusic()
+}
+
+playMusic()
 
 function showModal(id) {
     if (!clickable) return
@@ -426,6 +474,11 @@ function onKeyDown(event) {
 }
 
 modalExitButton.addEventListener("click", hideModal)
+if (musicToggleButton) {
+    musicToggleButton.addEventListener("click", toggleMusic)
+}
+window.addEventListener("pointerdown", unlockMusicOnFirstInteraction, { once: true })
+window.addEventListener("keydown", unlockMusicOnFirstInteraction, { once: true })
 window.addEventListener("resize", onResize)
 window.addEventListener("click", onClick)
 window.addEventListener("pointermove", onPointerMove)

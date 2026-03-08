@@ -50,3 +50,15 @@
 .modal-exit-button{
     height: 2rem;
 }
+
+.music-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    border: 2px solid white;
+    background-color: #b3907d;
+    color: aliceblue;
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+}
