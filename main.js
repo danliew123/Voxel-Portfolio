@@ -228,7 +228,7 @@ const intersectObjectsNames = ['Project_1', 'Project_2', 'Project_3', 'Name', 'P
 
 const loader = new GLTFLoader();
 loader.load( 
-    './portfolio1.1.glb', 
+    './portfolio1.2.glb', 
     function ( glb ) {
         glb.scene.traverse((child) => {
             if (intersectObjectsNames.includes(child.name)) {
