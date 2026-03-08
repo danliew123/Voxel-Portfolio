@@ -160,7 +160,8 @@ function showModal(id) {
     }
 }
 
-function hideModal(){
+function hideModal(event){
+    event.stopPropagation()
     modal.classList.toggle("hidden")
     clickable = true
 }
