@@ -20,7 +20,7 @@ const GRAVITY = 30
 const CAPSULE_RADIUS = 0.35
 const CAPSULE_HEIGHT = 1
 const JUMP_HEIGHT = 15
-const MOVE_SPEED = 8
+const MOVE_SPEED = 10
 
 let character = {
     instance: null,
@@ -51,21 +51,25 @@ renderer.shadowMap.enabled = true
 renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.toneMappingExposure = 2.7
 
+let clickable = true
 const modalContent = {
     'Project_1': {
         title: "Robot Pong Competition - 1st Place",
         content: "Built and programmed a LEGO Mindstorms robot using motors, ultrasonic and infrared sensors, with control logic developed in LabVIEW. Won by continuously refining mechanical setup and tuning control parameters to maximize scoring efficiency and ball transfer rate.",
-        link: "https://www.youtube.com/watch?v=x8Aio5qC4fA"
+        link: "https://www.youtube.com/watch?v=x8Aio5qC4fA",
+        
     },
     'Project_2': {
         title: "Fire Escape Mixed Reality Experience",
         content: "Developed an immersive mixed reality game designed to simulate fire emergency scenarios and train users in proper evacuation and fire response procedures.",
-        link: "https://www.youtube.com/watch?v=sfbiXcwaMRk"
+        link: "https://www.youtube.com/watch?v=sfbiXcwaMRk",
+        
     },
     'Project_3': {
         title: "Human–Robot Tic-Tac-Toe",
         content: "Built a human–robot interaction system where a TM5-900 collaborative robot plays tic-tac-toe against a person using real-time vision and autonomous decision-making. ",
-        link: "https://www.youtube.com/watch?v=XGwxpwdxdEI"
+        link: "https://www.youtube.com/watch?v=XGwxpwdxdEI",
+        
     },
     "Portal": {
         title: "My Linkedin",
@@ -89,6 +93,8 @@ const modalExitButton = document.querySelector(".modal-exit-button")
 const modalVisitProjectButton = document.querySelector(".modal-project-visit-button")
 
 function showModal(id) {
+    if (!clickable) return
+    clickable = false
     const content = modalContent[id]
     if (content) {
         modalTitle.textContent = content.title
@@ -108,6 +114,7 @@ function showModal(id) {
 
 function hideModal(){
     modal.classList.toggle("hidden")
+    clickable = true
 }
 
 function jumpCharacter(meshID) {
@@ -173,7 +180,7 @@ const intersectObjectsNames = ['Project_1', 'Project_2', 'Project_3', 'Name', 'P
 
 const loader = new GLTFLoader();
 loader.load( 
-    './portfolio.glb', 
+    './portfolio1.1.glb', 
     function ( glb ) {
         glb.scene.traverse((child) => {
             if (intersectObjectsNames.includes(child.name)) {
@@ -411,7 +418,7 @@ function onKeyDown(event) {
             targetRotation = 0
             break
         default:
-            returns
+            return
  
     }
     playerVelocity.y = JUMP_HEIGHT
